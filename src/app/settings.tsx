@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,6 +14,7 @@ const preferenceLabels: Record<ThemePreference, string> = {
 };
 
 export default function SettingsScreen() {
+  const router = useRouter();
   const { isReady, resolvedTheme, themePreference, setThemePreference, toggleThemePreference } =
     useAppPreferences();
   const [syncLabel, setSyncLabel] = useState('Carregando preferências locais...');
@@ -34,6 +36,9 @@ export default function SettingsScreen() {
     <ScrollView>
       <SafeAreaView style={styles.safeArea}>
         <ThemedView style={styles.heroCard}>
+          <Pressable onPress={() => router.back()} style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
+            <ThemedText type="smallBold">Voltar</ThemedText>
+          </Pressable>
           <ThemedText type="code" themeColor="textSecondary">
             PREFERÊNCIAS GLOBAIS
           </ThemedText>
@@ -70,11 +75,7 @@ export default function SettingsScreen() {
             })}
           </View>
 
-          <Pressable
-            style={({ pressed }) => [styles.secondaryAction, pressed && styles.pressed]}
-            onPress={toggleThemePreference}>
-            <ThemedText type="smallBold">Alternar tema</ThemedText>
-          </Pressable>
+          {/* Alternar tema button removed per user preference; keep explicit Dark/Light options only */}
 
           <ThemedView style={styles.summaryBox}>
             <ThemedText type="smallBold">Tema resolvido: {resolvedTheme}</ThemedText>
@@ -143,5 +144,13 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.85,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.three,
+    borderRadius: Spacing.three,
+    backgroundColor: 'rgba(0, 210, 255, 0.06)',
+    marginBottom: Spacing.two,
   },
 });

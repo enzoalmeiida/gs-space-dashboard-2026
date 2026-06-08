@@ -1,5 +1,7 @@
+import DetailsModal from '@/components/details-modal';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
@@ -14,6 +16,7 @@ type RegisteredCargo = {
 };
 
 export default function TrackingScreen() {
+  const router = useRouter();
   const [recentCargoes, setRecentCargoes] = useState<RegisteredCargo[]>([
     {
       cargoCode: 'ORBIT-104',
@@ -22,10 +25,15 @@ export default function TrackingScreen() {
     },
   ]);
 
+  const [selected, setSelected] = useState<RegisteredCargo | null>(null);
+
   return (
     <ScrollView>
       <SafeAreaView style={styles.safeArea}>
         <ThemedView style={styles.heroCard}>
+          <Pressable onPress={() => router.back()} style={({ pressed }) => [styles.backButton, pressed && styles.pressed]}>
+            <ThemedText type="smallBold">Voltar</ThemedText>
+          </Pressable>
           <ThemedText type="code" themeColor="textSecondary">
             REGISTRO OPERACIONAL
           </ThemedText>
@@ -55,15 +63,31 @@ export default function TrackingScreen() {
           <ThemedText type="subtitle">Cadastros recentes</ThemedText>
           <View style={styles.listContent}>
             {recentCargoes.map(item => (
-              <ThemedView key={item.cargoCode} style={styles.listItem}>
-                <ThemedText type="smallBold">{item.cargoCode}</ThemedText>
-                <ThemedText themeColor="textSecondary" type="small">
-                  {item.origin} → {item.destination}
-                </ThemedText>
-              </ThemedView>
+              <Pressable key={item.cargoCode} onPress={() => setSelected(item)}>
+                <ThemedView style={styles.listItem}>
+                  <ThemedText type="smallBold">{item.cargoCode}</ThemedText>
+                  <ThemedText themeColor="textSecondary" type="small">
+                    {item.origin} → {item.destination}
+                  </ThemedText>
+                </ThemedView>
+              </Pressable>
             ))}
           </View>
         </ThemedView>
+        <DetailsModal visible={!!selected} onClose={() => setSelected(null)} title={selected?.cargoCode}>
+          {selected ? (
+            <>
+              <ThemedText type="smallBold">Origem</ThemedText>
+              <ThemedText>{selected.origin}</ThemedText>
+
+              <ThemedText type="smallBold">Destino</ThemedText>
+              <ThemedText>{selected.destination}</ThemedText>
+
+              <ThemedText type="smallBold">Código</ThemedText>
+              <ThemedText>{selected.cargoCode}</ThemedText>
+            </>
+          ) : null}
+        </DetailsModal>
       </SafeAreaView>
     </ScrollView>
   );
@@ -86,6 +110,16 @@ const styles = StyleSheet.create({
   },
   title: {
     maxWidth: 560,
+  },
+  backButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: Spacing.two,
+    paddingHorizontal: Spacing.three,
+    borderRadius: Spacing.three,
+    backgroundColor: 'rgba(0, 210, 255, 0.06)',
+  },
+  pressed: {
+    opacity: 0.85,
   },
   listCard: {
     gap: Spacing.three,

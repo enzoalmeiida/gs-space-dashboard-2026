@@ -6,12 +6,13 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SatelliteStatusChart } from '@/components/charts/satellite-status-chart';
 import { MetricCard } from '@/components/metric-card';
-import { Linking } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import WeatherCard from '@/components/weather-card';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { mockTelemetryApiResponse } from '@/utils/mockData';
+import { Linking } from 'react-native';
 
 export default function HomeScreen() {
   const theme = useTheme();
@@ -88,6 +89,10 @@ export default function HomeScreen() {
               highlight="WARN"
               delay={240}
             />
+          </View>
+
+          <View style={[styles.metricItem, isWide && styles.metricItemWide]}>
+            <WeatherCard lat={-23.55} lon={-46.63} />
           </View>
         </View>
 

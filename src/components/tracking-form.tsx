@@ -1,5 +1,5 @@
 import { useState, type ComponentProps } from 'react';
-import { Pressable, StyleSheet, TextInput, View } from 'react-native';
+import { Alert, Platform, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -14,7 +14,7 @@ type TrackingFormValues = {
 };
 
 type TrackingFormProps = {
-  onSubmit?: (values: TrackingFormValues) => void;
+  onSubmit?: (values: TrackingFormValues & { latitude?: number; longitude?: number }) => void;
 };
 
 type FormErrors = Partial<Record<keyof TrackingFormValues, string>>;
@@ -84,6 +84,39 @@ export function TrackingForm({ onSubmit }: TrackingFormProps) {
     setValues(initialValues);
   }
 
+  async function useCurrentLocation() {
+    try {
+      if (Platform.OS === 'web') {
+        if (!navigator?.geolocation) {
+          Alert.alert('Erro', 'Geolocalização não está disponível neste navegador.');
+          return;
+        }
+        navigator.geolocation.getCurrentPosition((pos) => {
+          const coords = pos.coords;
+          setValues(current => ({ ...current, origin: current.origin || `Lat:${coords.latitude.toFixed(4)}`, destination: current.destination || `Lon:${coords.longitude.toFixed(4)}` }));
+          setSuccessMessage('Localização capturada e aplicada ao formulário.');
+        }, () => {
+          Alert.alert('Erro', 'Não foi possível obter a localização.');
+        });
+        return;
+      }
+
+      const Location = await import('expo-location');
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permissão negada', 'Não foi possível obter a localização do dispositivo.');
+        return;
+      }
+      const pos = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.High });
+      const coords = pos.coords;
+      // attach coords to form as origin/destination hint or submit with coords
+      setValues(current => ({ ...current, origin: current.origin || `Lat:${coords.latitude.toFixed(4)}`, destination: current.destination || `Lon:${coords.longitude.toFixed(4)}` }));
+      setSuccessMessage('Localização capturada e aplicada ao formulário.');
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível obter a localização.');
+    }
+  }
+
   return (
     <ThemedView type="backgroundElement" style={styles.card}>
       <Field
@@ -123,13 +156,21 @@ export function TrackingForm({ onSubmit }: TrackingFormProps) {
         error={errors.satelliteWindow}
       />
 
-      <Pressable
-        style={({ pressed }) => [styles.submitButton, pressed && styles.pressed]}
-        onPress={handleSubmit}>
-        <ThemedText type="smallBold" style={styles.submitLabel}>
-          Cadastrar carga
-        </ThemedText>
-      </Pressable>
+      <View style={{ flexDirection: 'row', gap: Spacing.two }}>
+        <Pressable
+          style={({ pressed }) => [styles.submitButton, pressed && styles.pressed, { flex: 1 }]}
+          onPress={handleSubmit}>
+          <ThemedText type="smallBold" style={styles.submitLabel}>
+            Cadastrar carga
+          </ThemedText>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [styles.secondaryButton, pressed && styles.pressed, { paddingVertical: Spacing.three, paddingHorizontal: Spacing.three, borderRadius: Spacing.three }]}
+          onPress={useCurrentLocation}>
+          <ThemedText type="smallBold">Usar minha localização</ThemedText>
+        </Pressable>
+      </View>
 
       {successMessage ? (
         <ThemedView style={styles.successBox}>
@@ -205,6 +246,10 @@ const styles = StyleSheet.create({
   },
   submitLabel: {
     color: '#0B0D17',
+  },
+  secondaryButton: {
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 210, 255, 0.12)',
   },
   pressed: {
     opacity: 0.85,
