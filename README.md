@@ -40,6 +40,84 @@ Screenshots e vídeo
 
 Notas e próximos passos
 - O README atual foi expandido com o resumo do projeto; adicione prints e o link do vídeo quando disponíveis.
+- O README atual foi expandido com o resumo do projeto; adicione prints e o link do vídeo quando disponíveis.
+
+---
+
+Sobre o Projeto
+
+- Nome do app: gs-space-dashboard
+- Descrição do problema que resolve: facilita o monitoramento e a gestão logística de cargas espaciais, fornecendo um painel centralizado com telemetria simulada, histórico de registros de carga, visualização de status de satélites e informações meteorológicas relevantes para operações de janela de lançamento/recebimento.
+- Funcionalidades implementadas:
+	- Dashboard com métricas e gráficos (status de satélites, distribuição de cargas).
+	- Formulário de registro de cargas com validação e persistência local (`AsyncStorage`).
+	- Visualizador de imagens de satélite (mock) e modal de detalhes.
+	- Context API para preferências (tema) com persistência.
+	- Integração básica de clima (serviço mock/OpenWeather) exibida no `WeatherCard`.
+	- Navegação entre telas via `expo-router` (Home, Tracking, Settings, Explore).
+
+Integrantes do Grupo
+
+- (Preencher: nomes e RMs aqui — edite `entrega.txt` ou este campo)
+
+Como Rodar o Projeto
+
+Pré-requisitos:
+
+- Node.js instalado em sua máquina.
+- Aplicativo Expo Go instalado no seu dispositivo móvel (Android ou iOS).
+
+Passo a passo para execução local:
+
+1. Clone este repositório para a sua máquina:
+
+```bash
+git clone https://github.com/enzoalmeiida/gs-space-dashboard-2026.git
+```
+
+2. Acesse o diretório do projeto:
+
+```bash
+cd gs-space-dashboard
+```
+
+3. Instale as dependências do projeto:
+
+```bash
+npm install
+```
+
+4. Inicie o servidor do Expo:
+
+```bash
+npx expo start
+```
+
+5. Abra o aplicativo Expo Go no seu celular e escaneie o QR Code exibido no terminal.
+
+Demonstração
+
+- (Adicionar link do vídeo de até 3 minutos no `entrega.txt` ou aqui)
+
+Decisões Técnicas
+
+- Plataforma: Expo (SDK ~56) para compatibilidade multiplataforma e desenvolvimento rápido.
+- Roteamento: `expo-router` (file-based routing) para estruturar telas em `src/app`.
+- Estado global: Context API (`src/context/app-preferences-context.tsx`) para tema e preferências.
+- Persistência: `@react-native-async-storage/async-storage` para salvar histórico de cargas e preferências.
+- Gráficos: `react-native-chart-kit` + `react-native-svg` para visualizações simples.
+- Animações: `react-native-reanimated` para animações compatíveis com web e nativo.
+- Localização: `expo-location` importado dinamicamente em `src/components/tracking-form.tsx` para evitar bundling em web; fallback para `navigator.geolocation` no web.
+- Testes: Jest + ts-jest para testes unitários (`src/__tests__/validation.test.ts`).
+
+Próximos passos
+
+- Incluir prints/screenshots em `assets/screenshots/` e referenciá-los no README.
+- Gravar vídeo de demonstração (até 3 minutos) e adicionar o link em `entrega.txt`.
+- Expandir testes unitários e adicionar coverage ao CI.
+- Melhorar fluxos de permissão (localização) com UX mais clara.
+- Integrar uma API real de imagens de satélite / telemetria para dados reais.
+
 
 ---
 
