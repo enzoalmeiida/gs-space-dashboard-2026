@@ -22,6 +22,7 @@ export type CargoTelemetryEntry = {
     detectedAt: string;
     description: string;
   }[];
+  latestImageUri?: string;
 };
 
 export const mockTelemetryApiResponse = {
@@ -41,7 +42,7 @@ export const mockTelemetryApiResponse = {
     { name: 'Degradado', value: 9, color: '#FF8A3D', legendFontColor: '#9CA3AF', legendFontSize: 12 },
     { name: 'Offline', value: 4, color: '#EF4444', legendFontColor: '#9CA3AF', legendFontSize: 12 },
   ],
-  routes: [
+  routes: ([
     {
       cargoId: 'GS-LOAD-2048',
       trackingId: 'TRK-SEA-001',
@@ -66,6 +67,7 @@ export const mockTelemetryApiResponse = {
         { timestamp: '18:00', temperatureCelsius: 23.5 },
         { timestamp: '21:00', temperatureCelsius: 21.8 },
       ],
+        latestImageUri: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3',
       climateAnomalies: [
         {
           type: 'STORM_CELL',
@@ -99,6 +101,7 @@ export const mockTelemetryApiResponse = {
         { timestamp: '18:00', temperatureCelsius: 36.9 },
         { timestamp: '21:00', temperatureCelsius: 34.1 },
       ],
+        latestImageUri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3',
       climateAnomalies: [
         {
           type: 'HEAT_SPIKE',
@@ -116,5 +119,5 @@ export const mockTelemetryApiResponse = {
         },
       ],
     },
-  ] as CargoTelemetryEntry[],
+  ] as unknown) as CargoTelemetryEntry[],
 } as const;

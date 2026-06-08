@@ -1,4 +1,4 @@
-import { useWindowDimensions } from 'react-native';
+import { useWindowDimensions, View } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
 import { useTheme } from '@/hooks/use-theme';
@@ -12,10 +12,11 @@ type SatelliteStatusChartProps = {
 export function SatelliteStatusChart({ labels, values, height = 240 }: SatelliteStatusChartProps) {
   const theme = useTheme();
   const { width } = useWindowDimensions();
-  const chartWidth = Math.max(280, Math.min(width - 48, 720));
+  const chartWidth = Math.max(280, Math.min(width - 64, 900));
 
   return (
-    <LineChart
+    <View style={{ width: '100%', alignItems: 'center' }}>
+      <LineChart
       data={{
         labels,
         datasets: [
@@ -49,6 +50,7 @@ export function SatelliteStatusChart({ labels, values, height = 240 }: Satellite
         },
       }}
       style={{ borderRadius: 24 }}
-    />
+      />
+    </View>
   );
 }

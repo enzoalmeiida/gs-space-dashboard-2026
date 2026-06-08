@@ -5,6 +5,7 @@ import { PieChart } from 'react-native-chart-kit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SatelliteStatusChart } from '@/components/charts/satellite-status-chart';
+import SatelliteImageViewer from '@/components/satellite-image-viewer';
 import { MetricCard } from '@/components/metric-card';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -18,6 +19,7 @@ export default function HomeScreen() {
   const [snapshot, setSnapshot] = useState<typeof mockTelemetryApiResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const pieChartWidth = Math.max(280, Math.min(width - 48, 720));
+  const contentWidth = Math.min(MaxContentWidth, width - Spacing.four * 2);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -56,7 +58,7 @@ export default function HomeScreen() {
           </View>
         </ThemedView>
 
-        <View style={styles.metricsGrid}>
+        <View style={[styles.metricsGrid, { maxWidth: contentWidth }] }>
           <MetricCard
             title="Sinal do Satélite"
             value={snapshot ? `${snapshot.fleetSummary.averageSignalStrength}%` : '...'}
@@ -80,7 +82,7 @@ export default function HomeScreen() {
           />
         </View>
 
-        <View style={styles.chartRow}>
+        <View style={[styles.chartRow, { maxWidth: contentWidth }] }>
           <ThemedView style={styles.chartCard}>
             <View style={styles.sectionHeader}>
               <View>
@@ -97,11 +99,17 @@ export default function HomeScreen() {
             </View>
 
             {snapshot ? (
-              <SatelliteStatusChart
-                labels={snapshot.routes[0].temperatureSeries.map(item => item.timestamp)}
-                values={snapshot.routes[0].temperatureSeries.map(item => item.temperatureCelsius)}
-                height={260}
-              />
+              <View style={{ width: '100%' }}>
+                <SatelliteStatusChart
+                  labels={snapshot.routes[0].temperatureSeries.map(item => item.timestamp)}
+                  values={snapshot.routes[0].temperatureSeries.map(item => item.temperatureCelsius)}
+                  height={260}
+                />
+
+                <View style={{ marginTop: Spacing.three }}>
+                  <SatelliteImageViewer uri={snapshot.routes[0].latestImageUri} aspect={16 / 9} />
+                </View>
+              </View>
             ) : (
               <ThemedView type="backgroundElement" style={styles.chartPlaceholder}>
                 <ThemedText themeColor="textSecondary">Carregando dados do satélite...</ThemedText>
@@ -124,7 +132,7 @@ export default function HomeScreen() {
 
             {snapshot ? (
               <PieChart
-                data={snapshot.operationalStatusBreakdown}
+                data={[...snapshot.operationalStatusBreakdown]}
                 width={pieChartWidth}
                 height={240}
                 chartConfig={{
