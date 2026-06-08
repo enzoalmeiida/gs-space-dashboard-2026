@@ -5,8 +5,8 @@ import { PieChart } from 'react-native-chart-kit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SatelliteStatusChart } from '@/components/charts/satellite-status-chart';
-import SatelliteImageViewer from '@/components/satellite-image-viewer';
 import { MetricCard } from '@/components/metric-card';
+import { Linking } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { MaxContentWidth, Spacing } from '@/constants/theme';
@@ -20,6 +20,7 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(true);
   const pieChartWidth = Math.max(280, Math.min(width - 48, 720));
   const contentWidth = Math.min(MaxContentWidth, width - Spacing.four * 2);
+  const isWide = width >= 900;
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -58,32 +59,40 @@ export default function HomeScreen() {
           </View>
         </ThemedView>
 
-        <View style={[styles.metricsGrid, { maxWidth: contentWidth }] }>
-          <MetricCard
-            title="Sinal do Satélite"
-            value={snapshot ? `${snapshot.fleetSummary.averageSignalStrength}%` : '...'}
-            subtitle="Qualidade média do enlace orbital"
-            highlight="LIVE"
-            delay={80}
-          />
-          <MetricCard
-            title="Cargas em Trânsito"
-            value={snapshot ? snapshot.fleetSummary.loadsInTransit.toString() : '...'}
-            subtitle="Carga ativa aguardando confirmação de entrega"
-            highlight="OPS"
-            delay={160}
-          />
-          <MetricCard
-            title="Alertas Climáticos"
-            value={snapshot ? snapshot.fleetSummary.loadsWithAlerts.toString() : '...'}
-            subtitle="Rotas com anomalias térmicas ou tempestades"
-            highlight="WARN"
-            delay={240}
-          />
+        <View style={[styles.metricsGrid, { maxWidth: contentWidth, flexDirection: isWide ? 'row' : 'column' }] }>
+          <View style={[styles.metricItem, isWide && styles.metricItemWide]}>
+            <MetricCard
+              title="Sinal do Satélite"
+              value={snapshot ? `${snapshot.fleetSummary.averageSignalStrength}%` : '...'}
+              subtitle="Qualidade média do enlace orbital"
+              highlight="LIVE"
+              delay={80}
+            />
+          </View>
+
+          <View style={[styles.metricItem, isWide && styles.metricItemWide]}>
+            <MetricCard
+              title="Cargas em Trânsito"
+              value={snapshot ? snapshot.fleetSummary.loadsInTransit.toString() : '...'}
+              subtitle="Carga ativa aguardando confirmação de entrega"
+              highlight="OPS"
+              delay={160}
+            />
+          </View>
+
+          <View style={[styles.metricItem, isWide && styles.metricItemWide]}>
+            <MetricCard
+              title="Alertas Climáticos"
+              value={snapshot ? snapshot.fleetSummary.loadsWithAlerts.toString() : '...'}
+              subtitle="Rotas com anomalias térmicas ou tempestades"
+              highlight="WARN"
+              delay={240}
+            />
+          </View>
         </View>
 
-        <View style={[styles.chartRow, { maxWidth: contentWidth }] }>
-          <ThemedView style={styles.chartCard}>
+        <View style={[styles.chartRow, { maxWidth: contentWidth, flexDirection: isWide ? 'row' : 'column' }] }>
+          <ThemedView style={[styles.chartCard, isWide && styles.chartCardWide]}>
             <View style={styles.sectionHeader}>
               <View>
                 <ThemedText type="subtitle">Variação térmica da rota</ThemedText>
@@ -107,7 +116,21 @@ export default function HomeScreen() {
                 />
 
                 <View style={{ marginTop: Spacing.three }}>
-                  <SatelliteImageViewer uri={snapshot.routes[0].latestImageUri} aspect={16 / 9} />
+                  {/* Removed large embedded photo for layout stability. Provide compact action instead. */}
+                  {(() => {
+                    const imageUri = snapshot.routes[0].latestImageUri;
+                    return imageUri ? (
+                      <Pressable
+                        onPress={() => Linking.openURL(imageUri)}
+                        style={({ pressed }) => [{ padding: Spacing.two, borderRadius: Spacing.two, backgroundColor: 'rgba(0,210,255,0.06)', opacity: pressed ? 0.9 : 1 }]}
+                      >
+                        <ThemedText type="smallBold">Abrir imagem de satélite</ThemedText>
+                        <ThemedText themeColor="textSecondary">Clique para visualizar no navegador (abre novo separador)</ThemedText>
+                      </Pressable>
+                    ) : (
+                      <ThemedText themeColor="textSecondary">Nenhuma imagem disponível para esta rota.</ThemedText>
+                    );
+                  })()}
                 </View>
               </View>
             ) : (
@@ -117,7 +140,7 @@ export default function HomeScreen() {
             )}
           </ThemedView>
 
-          <ThemedView style={styles.chartCard}>
+          <ThemedView style={[styles.chartCard, isWide && styles.chartCardWide] }>
             <View style={styles.sectionHeader}>
               <View>
                 <ThemedText type="subtitle">Status operacional da frota</ThemedText>
@@ -231,5 +254,17 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.six,
     alignItems: 'center',
     borderRadius: Spacing.three,
+  },
+  metricItem: {
+    marginBottom: Spacing.three,
+  },
+  metricItemWide: {
+    flex: 1,
+    marginRight: Spacing.three,
+    marginBottom: 0,
+  },
+  chartCardWide: {
+    flex: 1,
+    marginRight: Spacing.three,
   },
 });

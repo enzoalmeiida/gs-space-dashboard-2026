@@ -1,7 +1,6 @@
-import React from 'react';
-import { StyleSheet, View, Image, Dimensions } from 'react-native';
-import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { Dimensions, Image, StyleSheet, View } from 'react-native';
 import { PanGestureHandler, PinchGestureHandler } from 'react-native-gesture-handler';
+import Animated, { useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
 
 type Props = {
   uri?: string;
