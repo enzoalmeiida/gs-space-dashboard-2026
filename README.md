@@ -1,56 +1,45 @@
-# Welcome to your Expo app 👋
+## gs-space-dashboard — Painel de logística espacial
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Este repositório contém um aplicativo multiplataforma (Expo + React Native + TypeScript) desenvolvido como um dashboard para logística espacial, com rastreamento de cargas, visualizações de telemetria e integração básica de clima.
 
-## Get started
+Principais funcionalidades
+- Navegação com `expo-router` (páginas: Home, Tracking, Settings, Explore)
+- Context API para preferências (tema) com persistência em `AsyncStorage`
+- Formulário de registro de cargas (`TrackingForm`) com validação e armazenamento local
+- Dashboards com gráficos (`react-native-chart-kit`) e cartões de métricas
+- Visualizador de imagens de satélite (mock) e serviço de telemetria simulado
 
-1. Install dependencies
+Requisitos atendidos (resumo)
+- Projeto criado com Expo e `expo-router` configurado (entry em `package.json`)
+- Ao menos 3 rotas: `src/app/index.tsx`, `src/app/tracking.tsx`, `src/app/settings.tsx` (ver `src/app`)
+- Uso de `useState` e `useEffect` em vários componentes
+- Context API implementada em `src/context/app-preferences-context.tsx` e persistida com `AsyncStorage`
+- Formulário com validação em `src/components/tracking-form.tsx`
+- Dashboards e gráficos em `src/app/index.tsx` e `src/components/charts/*`
 
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+Instalação
 
 ```bash
-npm run reset-project
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Executando testes
 
-### Other setup steps
+```bash
+npm test
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Documentos de entrega
+- `entrega.txt` — arquivo com nomes, RMs e links (modelo criado no repositório)
+- `VIDEO_INSTRUCTIONS.md` — instruções para gravar e enviar o vídeo de demonstração
 
-## Learn more
+Screenshots e vídeo
+- Adicione prints na pasta `assets/screenshots/` e atualize este README com os links das imagens.
+- Grave um vídeo de até 3 minutos demonstrando o app e coloque o link no `entrega.txt`.
 
-To learn more about developing your project with Expo, look at the following resources:
+Notas e próximos passos
+- O README atual foi expandido com o resumo do projeto; adicione prints e o link do vídeo quando disponíveis.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

@@ -1,0 +1,16 @@
+Nomes e RMs:
+- Nome 1 — RM: _______
+- Nome 2 — RM: _______
+- Nome 3 — RM: _______
+
+Repositório:
+https://github.com/enzoalmeiida/gs-space-dashboard-2026
+
+Links importantes:
+- README: https://github.com/enzoalmeiida/gs-space-dashboard-2026/blob/main/README.md
+- Vídeo de demonstração (cole o link aqui):
+
+Observações:
+- O arquivo README.md contém instruções de execução e resumo das funcionalidades.
+- Adicione prints em `assets/screenshots/` e atualize o README com os links.
+
