@@ -31,6 +31,7 @@ export function TrackingForm({ onSubmit }: TrackingFormProps) {
   const [values, setValues] = useState(initialValues);
   const [errors, setErrors] = useState<FormErrors>({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
 
   function updateField(field: keyof TrackingFormValues, nextValue: string) {
     setValues(current => ({ ...current, [field]: nextValue }));
@@ -79,9 +80,10 @@ export function TrackingForm({ onSubmit }: TrackingFormProps) {
       satelliteWindow: values.satelliteWindow.trim(),
     };
 
-    onSubmit?.(normalizedValues);
+    onSubmit?.({ ...normalizedValues, latitude: coords?.latitude, longitude: coords?.longitude });
     setSuccessMessage(`Carga ${normalizedValues.cargoCode} cadastrada com sucesso.`);
     setValues(initialValues);
+    setCoords(null);
   }
 
   async function useCurrentLocation() {
@@ -94,6 +96,7 @@ export function TrackingForm({ onSubmit }: TrackingFormProps) {
         navigator.geolocation.getCurrentPosition((pos) => {
           const coords = pos.coords;
           setValues(current => ({ ...current, origin: current.origin || `Lat:${coords.latitude.toFixed(4)}`, destination: current.destination || `Lon:${coords.longitude.toFixed(4)}` }));
+          setCoords({ latitude: coords.latitude, longitude: coords.longitude });
           setSuccessMessage('Localização capturada e aplicada ao formulário.');
         }, () => {
           Alert.alert('Erro', 'Não foi possível obter a localização.');
@@ -111,6 +114,7 @@ export function TrackingForm({ onSubmit }: TrackingFormProps) {
       const coords = pos.coords;
       // attach coords to form as origin/destination hint or submit with coords
       setValues(current => ({ ...current, origin: current.origin || `Lat:${coords.latitude.toFixed(4)}`, destination: current.destination || `Lon:${coords.longitude.toFixed(4)}` }));
+      setCoords({ latitude: coords.latitude, longitude: coords.longitude });
       setSuccessMessage('Localização capturada e aplicada ao formulário.');
     } catch (e) {
       Alert.alert('Erro', 'Não foi possível obter a localização.');
