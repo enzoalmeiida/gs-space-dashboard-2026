@@ -16,4 +16,3 @@ Upload e link
 
 Formato recomendado
 - Resolução 720p ou 1080p, máximo 3 minutos.
-
