@@ -60,7 +60,7 @@ npx expo start
 
 ## d) Demonstração
 
-- (Adicionar link do vídeo de até 3 minutos no `entrega.txt` ou aqui)
+- https://youtu.be/ktCoaHc0CvQ
 - ### 📸 Telas do App
 
 | DashBoard Principal | Satélite | Novo Rastreio | Configurações |
