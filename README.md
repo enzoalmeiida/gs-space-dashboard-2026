@@ -65,7 +65,7 @@ npx expo start
 
 | DashBoard Principal | Satélite | Novo Rastreio | Configurações |
 | :---: | :---: | :---: | :---: |
-| ![Uptime](./assets/images/PrintUptime.jpeg) | ![Datacenter](./assets/images/PrintDatacenter.jpeg) | ![Andares](./assets/images/PrintAndares.jpeg) | ![Incidentes](./assets/images/PrintIncidentes.jpeg) |
+| ![DashBoard](assets/image.png) | ![Novo Rastreio](assets/imag1e.png) | ![Rastreio](assets/imag3e.png) | ![Configurações](assets/ima2ge.png) |
 
 ## e) Decisões Técnicas
 
